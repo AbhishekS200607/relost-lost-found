@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat - Relost</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-background flex items-center justify-center">
+    <div class="card">
+        <div class="chat-header">Chat</div>
+        <div class="chat-window">
+            <ul class="message-list" id="chat-messages">
+                <li class="system-message">This is an anonymous chat about the found item. Please be respectful and provide necessary details to verify ownership.</li>
+            </ul>
+        </div>
+        <div class="chat-input">
+            <input type="text" class="message-input" id="messageInput" placeholder="Type your message here" maxlength="500">
+            <button class="send-button" onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    
+    <script src="js/chat.js"></script>
+    <script>
+        document.getElementById('file').addEventListener('change', handleMediaUpload);
+    </script>
+</body>
+</html>

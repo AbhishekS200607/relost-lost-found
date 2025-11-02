@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wallets - Relost</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-card border-b border-border backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+            <button onclick="window.location.href='index.html'" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <img src="images/logo.png" alt="Relost Logo" class="logo-image">
+                <span class="logo-text">Relost</span>
+            </button>
+
+            <nav class="flex items-center gap-8">
+                <button onclick="window.location.href='index.html'" class="nav-link">Home</button>
+                <button onclick="window.location.href='browse.html'" class="nav-link">Browse Items</button>
+                <button onclick="window.location.href='lost.html'" class="nav-link">Lost Something</button>
+            </nav>
+
+            <div class="flex items-center gap-4" id="nav-actions">
+                <button id="found-item-btn" onclick="showPostModal()" class="btn-primary">Found an Item?</button>
+                <button id="login-btn" onclick="window.location.href='login.html'" class="nav-link">Login</button>
+                <button id="register-btn" onclick="window.location.href='register.html'" class="nav-link text-muted">Register</button>
+                <button id="logout-btn" onclick="logout()" class="nav-link" style="display:none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 bg-background">
+        <div class="max-w-7xl mx-auto px-8 py-8">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-6">
+                <a href="index.html" class="breadcrumb-link">Home</a>
+                <span class="breadcrumb-separator">›</span>
+                <a href="browse.html" class="breadcrumb-link">Browse Items</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-current">Wallets</span>
+            </nav>
+            
+            <h1 class="section-title">WALLETS</h1>
+            
+            <!-- Category Navigation -->
+            <div class="category-nav mb-8">
+                <div class="category-tabs">
+                    <button class="category-tab" onclick="window.location.href='browse.html'">All Items</button>
+                    <button class="category-tab active">Wallets</button>
+                    <button class="category-tab" onclick="window.location.href='phones.html'">Phones</button>
+                    <button class="category-tab" onclick="window.location.href='laptops.html'">Laptops</button>
+                    <button class="category-tab" onclick="window.location.href='keys.html'">Keys</button>
+                    <button class="category-tab" onclick="window.location.href='watches.html'">Watches</button>
+                    <button class="category-tab" onclick="window.location.href='cards.html'">Cards</button>
+                    <button class="category-tab" onclick="window.location.href='books.html'">Books</button>
+                    <button class="category-tab" onclick="window.location.href='bags.html'">Bags</button>
+                </div>
+            </div>
+
+            <!-- Items Grid -->
+            <div id="items-grid" class="items-grid"></div>
+            
+            <!-- No Results -->
+            <div id="no-results" class="text-center py-16" style="display:none;">
+                <p class="text-muted-foreground text-lg">No wallets found yet.</p>
+                <button onclick="showPostModal()" class="btn-primary mt-4">Post a Found Wallet</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-card border-t border-border py-8">
+        <div class="max-w-7xl mx-auto px-8 text-center text-muted-foreground">
+            <p>&copy; 2024 Relost. Connecting communities.</p>
+        </div>
+    </footer>
+
+    <!-- Post Item Modal -->
+    <div id="post-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <button onclick="hidePostModal()" class="modal-close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="modal-body">
+                <h2 class="modal-title">POST A FOUND WALLET</h2>
+                <p class="modal-subtitle">Please do not include sensitive personal details in the description. Focus on unique identifiers only.</p>
+
+                <form id="item-form" class="space-y-6">
+                    <input type="hidden" id="category" value="WALLET">
+
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" class="form-textarea" placeholder="Describe the wallet (color, brand, distinctive features)..." required></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="locationFound" class="form-label">Location Found</label>
+                            <input type="text" id="locationFound" class="form-input" placeholder="e.g., Central Park, NYC" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateFound" class="form-label">Date Found</label>
+                            <input type="date" id="dateFound" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Photo (Optional)</label>
+                        <div class="upload-container">
+                            <div class="upload-header">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <p>Browse File to upload!</p>
+                            </div>
+                            <label for="photo" class="upload-footer">
+                                <svg fill="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path>
+                                    <path d="M18.153 6h-.009v5.342H23.5v-.002z"></path>
+                                </svg>
+                                <p id="file-status">No file selected</p>
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path>
+                                    <path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path>
+                                    <path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path>
+                                </svg>
+                            </label>
+                            <input id="photo" type="file" accept="image/*">
+                        </div>
+                        <div id="photo-preview"></div>
+                    </div>
+
+                    <div class="pt-4 flex gap-3">
+                        <button type="submit" class="btn-primary flex-1">Submit Post</button>
+                        <button type="button" onclick="hidePostModal()" class="btn-outline">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Detail Modal -->
+    <div id="item-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <button onclick="hideItemModal()" class="modal-close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div id="item-detail-content" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/category.js"></script>
+    <script>
+        // Set category for this page
+        window.pageCategory = 'WALLET';
+    </script>
+</body>
+</html>

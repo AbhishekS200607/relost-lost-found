@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relost</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-card border-b border-border backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+            <button onclick="window.location.href='index.html'" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <img src="images/logo.png" alt="Relost Logo" class="logo-image">
+                <span class="logo-text">Relost</span>
+            </button>
+
+            <nav class="flex items-center gap-8">
+                <button onclick="window.location.href='index.html'" class="nav-link">Home</button>
+                <button onclick="window.location.href='browse.html'" class="nav-link">Browse Items</button>
+                <button class="nav-link active">Lost Something</button>
+            </nav>
+
+            <div class="flex items-center gap-4" id="nav-actions">
+                <button id="login-btn" onclick="window.location.href='login.html'" class="nav-link">Login</button>
+                <button id="register-btn" onclick="window.location.href='register.html'" class="nav-link text-muted">Register</button>
+                <button id="logout-btn" onclick="logout()" class="nav-link" style="display:none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1 bg-background">
+        <div class="max-w-4xl mx-auto px-8 py-8">
+            <!-- Breadcrumb -->
+            <nav class="breadcrumb mb-6">
+                <a href="index.html" class="breadcrumb-link">Home</a>
+                <span class="breadcrumb-separator">›</span>
+                <span class="breadcrumb-current">Lost Something</span>
+            </nav>
+            
+            <h1 class="section-title">RELOST</h1>
+            
+            <div class="lost-form-container">
+                <div class="lost-form-header">
+                    <h2>Lost Something?</h2>
+                    <p>Fill out this form to report your lost item. We'll help you connect with people who might have found it.</p>
+                </div>
+
+                <form id="lost-item-form" class="lost-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="item-name" class="form-label">Item Name</label>
+                            <input type="text" id="item-name" class="form-input" placeholder="e.g., iPhone 13, Black Wallet" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category" class="form-label">Category</label>
+                            <select id="category" class="form-select" required>
+                                <option value="">Select a category</option>
+                                <option value="WALLET">Wallet</option>
+                                <option value="KEYS">Keys</option>
+                                <option value="PHONE">Phone</option>
+                                <option value="LAPTOP">Laptop</option>
+                                <option value="WATCH">Watch</option>
+                                <option value="CARDS">Cards</option>
+                                <option value="BOOK">Book</option>
+                                <option value="BAG">Bag</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" class="form-textarea" placeholder="Describe your lost item in detail (color, brand, distinctive features, contents, etc.)" required></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="location-lost" class="form-label">Where did you lose it?</label>
+                            <input type="text" id="location-lost" class="form-input" placeholder="e.g., Central Park, NYC" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="date-lost" class="form-label">When did you lose it?</label>
+                            <input type="date" id="date-lost" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="contact-info" class="form-label">Contact Information</label>
+                        <input type="text" id="contact-info" class="form-input" placeholder="Phone number or email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Photo (Optional)</label>
+                        <div class="upload-container">
+                            <div class="upload-header">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <p>Upload a photo of your lost item</p>
+                            </div>
+                            <label for="photo" class="upload-footer">
+                                <svg fill="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path>
+                                    <path d="M18.153 6h-.009v5.342H23.5v-.002z"></path>
+                                </svg>
+                                <p id="file-status">No file selected</p>
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path>
+                                    <path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path>
+                                    <path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path>
+                                </svg>
+                            </label>
+                            <input id="photo" type="file" accept="image/*">
+                        </div>
+                        <div id="photo-preview"></div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Submit Relost</button>
+                        <button type="button" onclick="window.location.href='browse.html'" class="btn-outline">Browse Found Items</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-card border-t border-border py-8">
+        <div class="max-w-7xl mx-auto px-8 text-center text-muted-foreground">
+            <p>&copy; 2024 Relost. Connecting communities.</p>
+        </div>
+    </footer>
+
+    <script src="js/auth.js"></script>
+    <script src="js/lost.js"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relost</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen flex flex-col">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-card border-b border-border backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+            <!-- Logo -->
+            <button onclick="showHome()" class="flex items-center gap-3 hover:opacity-80 transition-opacity">
+                <img src="images/logo.png" alt="Relost Logo" class="logo-image">
+                <span class="logo-text">Relost</span>
+            </button>
+
+            <!-- Navigation -->
+            <nav class="flex items-center gap-8">
+                <button onclick="showHome()" class="nav-link active" id="home-nav">Home</button>
+                <button onclick="window.location.href='browse.html'" class="nav-link">Browse Items</button>
+                <button onclick="window.location.href='lost.html'" class="nav-link">Lost Something</button>
+            </nav>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-4" id="nav-actions">
+                <button id="found-item-btn" onclick="showPostModal()" class="btn-primary">Found an Item?</button>
+                <button id="login-btn" onclick="window.location.href='login.html'" class="nav-link">Login</button>
+                <button id="register-btn" onclick="window.location.href='register.html'" class="nav-link text-muted">Register</button>
+                <button id="logout-btn" onclick="logout()" class="nav-link" style="display:none;">Logout</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="flex-1">
+        <!-- Hero Section -->
+        <section class="relative bg-card">
+            <div class="max-w-7xl mx-auto px-8 py-20">
+                <div class="grid grid-cols-12 gap-8 items-center">
+                    <!-- Left: Bold Headline -->
+                    <div class="col-span-7 space-y-8">
+                        <h1 class="hero-title">
+                            REUNITING<br>
+                            WHAT'S LOST –<br>
+                            <span class="text-primary">A COMMUNITY</span><br>
+                            MOMENT
+                        </h1>
+
+                        <p class="hero-subtitle">
+                            Connect with dedicated finders and reclaim your valued possessions swiftly.
+                        </p>
+
+                        <!-- CTAs -->
+                        <div class="flex gap-4 pt-4">
+                            <button onclick="window.location.href='lost.html'" class="btn-outline">I've Lost Something</button>
+                            <button onclick="showPostModal()" class="btn-primary">I've Found Something</button>
+                        </div>
+                    </div>
+
+                    <!-- Right: Hero Image -->
+                    <div class="col-span-5 relative">
+                        <div class="hero-image-container">
+                            <img src="https://images.unsplash.com/photo-1760637627195-6c513252431b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb21tdW5pdHklMjBjb25uZWN0aW9uJTIwaGFwcHl8ZW58MXx8fHwxNzYxOTMzNTI2fDA&ixlib=rb-4.1.0&q=80&w=1080" alt="Hands exchanging items - community giving and returning" class="hero-image">
+                        </div>
+                        <div class="hero-decoration"></div>
+                    </div>
+                </div>
+
+                <!-- Scroll indicator -->
+                <div class="flex justify-center mt-16 animate-bounce">
+                    <svg class="w-6 h-6 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <polyline points="6,9 12,15 18,9"></polyline>
+                    </svg>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recently Found Section -->
+        <section class="bg-background py-16">
+            <div class="max-w-7xl mx-auto px-8">
+                <h2 class="section-title">RECENTLY FOUND ITEMS</h2>
+                <div id="items-grid" class="items-grid"></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-card border-t border-border py-8">
+        <div class="max-w-7xl mx-auto px-8 text-center text-muted-foreground">
+            <p>&copy; 2024 Relost. Connecting communities.</p>
+        </div>
+    </footer>
+
+    <!-- Post Item Modal -->
+    <div id="post-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <button onclick="hidePostModal()" class="modal-close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+
+            <div class="modal-body">
+                <h2 class="modal-title">POST A FOUND ITEM</h2>
+                <p class="modal-subtitle">Please do not include sensitive personal details in the description. Focus on unique identifiers only.</p>
+
+                <form id="item-form" class="space-y-6">
+                    <div class="form-group">
+                        <label for="category" class="form-label">Category</label>
+                        <select id="category" class="form-select" required>
+                            <option value="">Select a category</option>
+                            <option value="WALLET">Wallet</option>
+                            <option value="KEYS">Keys</option>
+                            <option value="PHONE">Phone</option>
+                            <option value="LAPTOP">Laptop</option>
+                            <option value="WATCH">Watch</option>
+                            <option value="CARDS">Cards</option>
+                            <option value="BOOK">Book</option>
+                            <option value="BAG">Bag</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea id="description" class="form-textarea" placeholder="Describe the item with unique identifiers (color, brand, distinctive features)..." required></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-group">
+                            <label for="locationFound" class="form-label">Location Found</label>
+                            <input type="text" id="locationFound" class="form-input" placeholder="e.g., Central Park, NYC" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="dateFound" class="form-label">Date Found</label>
+                            <input type="date" id="dateFound" class="form-input" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Photo (Optional)</label>
+                        <div class="upload-container">
+                            <div class="upload-header">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path d="M7 10V9C7 6.23858 9.23858 4 12 4C14.7614 4 17 6.23858 17 9V10C19.2091 10 21 11.7909 21 14C21 15.4806 20.1956 16.8084 19 17.5M7 10C4.79086 10 3 11.7909 3 14C3 15.4806 3.8044 16.8084 5 17.5M7 10C7.43285 10 7.84965 10.0688 8.24006 10.1959M12 12V21M12 12L15 15M12 12L9 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </g>
+                                </svg>
+                                <p>Browse File to upload!</p>
+                            </div>
+                            <label for="photo" class="upload-footer">
+                                <svg fill="#000000" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path d="M15.331 6H8.5v20h15V14.154h-8.169z"></path>
+                                        <path d="M18.153 6h-.009v5.342H23.5v-.002z"></path>
+                                    </g>
+                                </svg>
+                                <p id="file-status">No file selected</p>
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                                    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+                                    <g id="SVGRepo_iconCarrier">
+                                        <path d="M5.16565 10.1534C5.07629 8.99181 5.99473 8 7.15975 8H16.8402C18.0053 8 18.9237 8.9918 18.8344 10.1534L18.142 19.1534C18.0619 20.1954 17.193 21 16.1479 21H7.85206C6.80699 21 5.93811 20.1954 5.85795 19.1534L5.16565 10.1534Z" stroke="#000000" stroke-width="2"></path>
+                                        <path d="M19.5 5H4.5" stroke="#000000" stroke-width="2" stroke-linecap="round"></path>
+                                        <path d="M10 3C10 2.44772 10.4477 2 11 2H13C13.5523 2 14 2.44772 14 3V5H10V3Z" stroke="#000000" stroke-width="2"></path>
+                                    </g>
+                                </svg>
+                            </label>
+                            <input id="photo" type="file" accept="image/*">
+                        </div>
+                        <div id="photo-preview"></div>
+                    </div>
+
+                    <div class="pt-4 flex gap-3">
+                        <button type="submit" class="btn-primary flex-1">Submit Post</button>
+                        <button type="button" onclick="hidePostModal()" class="btn-outline">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Item Detail Modal -->
+    <div id="item-modal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <button onclick="hideItemModal()" class="modal-close">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div id="item-detail-content" class="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
