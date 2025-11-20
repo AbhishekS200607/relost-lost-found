@@ -41,6 +41,7 @@ if (document.getElementById('login-form')) {
                 localStorage.setItem('userId', data.userId);
                 window.location.href = 'index.html';
             } else {
+                console.error('Login error:', data);
                 alert('Login failed: ' + data.error);
             }
         } catch (error) {
