@@ -10,7 +10,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "${cors.allowed-origins:*}")
+@CrossOrigin(origins = "${app.cors.allowed-origins:*}")
 public class AuthController {
 
     @Autowired
