@@ -10,4 +10,5 @@ target/
 *.log
 uploads/
 .env
+.env.local
 application-local.properties
