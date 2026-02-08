@@ -2,6 +2,8 @@
 
 A full-stack web application for managing lost and found items, built with Spring Boot backend and vanilla JavaScript frontend.
 
+🚀 **Live Demo**: [https://lostandfound.up.railway.app](https://lostandfound.up.railway.app)
+
 ## Features
 
 - **User Authentication**: JWT-based secure login and registration
