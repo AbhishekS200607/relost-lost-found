@@ -307,16 +307,19 @@ function updateAuthUI() {
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
     const logoutBtn = document.getElementById('logout-btn');
+    const chatNavBtn = document.getElementById('chat-nav-btn');
     
     if (token && username) {
         loginBtn.style.display = 'none';
         registerBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
         logoutBtn.textContent = `Logout (${username})`;
+        if (chatNavBtn) chatNavBtn.style.display = 'inline-block';
     } else {
         loginBtn.style.display = 'inline-block';
         registerBtn.style.display = 'inline-block';
         logoutBtn.style.display = 'none';
+        if (chatNavBtn) chatNavBtn.style.display = 'none';
     }
 }
 

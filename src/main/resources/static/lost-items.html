@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lost Items - Relost</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-background">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 bg-card border-b">
+        <div class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="images/logo.png" alt="Relost Logo" class="logo-image">
+                <span class="logo-text">RELOST</span>
+            </div>
+            <nav class="flex items-center gap-8">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="browse.html" class="nav-link">Found Items</a>
+                <a href="lost-items.html" class="nav-link active">Lost Items</a>
+                <a href="lost.html" class="nav-link">Report Lost</a>
+                <button id="chat-nav-btn" onclick="window.location.href='chat.html'" class="nav-link" style="display:none;">💬 Chats</button>
+                <button id="login-btn" class="nav-link" onclick="window.location.href='login.html'">Login</button>
+                <button id="register-btn" class="nav-link" onclick="window.location.href='register.html'">Register</button>
+                <button id="logout-btn" class="nav-link" onclick="logout()" style="display: none;">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-8 py-16">
+        <!-- Search and Filter Section -->
+        <div class="search-filter-section mb-8">
+            <div class="search-main">
+                <div class="container">
+                    <div class="search-container">
+                        <input type="text" class="input" id="search-input" placeholder="Search lost items...">
+                        <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
+                            <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <button class="filter-toggle-btn" id="filter-toggle">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h18M3 12h12M3 20h6"/>
+                    </svg>
+                    Filters
+                </button>
+            </div>
+
+            <!-- Filters Panel -->
+            <div class="filters-panel" id="filters-panel" style="display: none;">
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="category-filter">
+                            <option value="">All Categories</option>
+                            <option value="WALLET">Wallet</option>
+                            <option value="KEYS">Keys</option>
+                            <option value="PHONE">Phone</option>
+                            <option value="LAPTOP">Laptop</option>
+                            <option value="WATCH">Watch</option>
+                            <option value="CARDS">Cards</option>
+                            <option value="BOOK">Book</option>
+                            <option value="BAG">Bag</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Location</label>
+                        <input type="text" class="form-input" id="location-filter" placeholder="Filter by location">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Date Lost</label>
+                        <input type="date" class="form-input" id="date-filter">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Sort By</label>
+                        <select class="form-select" id="sort-filter">
+                            <option value="date-desc">Newest First</option>
+                            <option value="date-asc">Oldest First</option>
+                            <option value="category">Category</option>
+                            <option value="location">Location</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn-outline w-full" onclick="clearFilters()">Clear Filters</button>
+            </div>
+        </div>
+
+        <!-- Items Section -->
+        <div class="mb-12">
+            <h2 class="section-title">LOST ITEMS</h2>
+            <p class="text-center text-muted-foreground mb-8" id="results-count">Loading...</p>
+            
+            <div class="items-grid" id="items-grid">
+                <div class="loading-container">
+                    <div class="loading-spinner"></div>
+                    <p>Loading lost items...</p>
+                </div>
+            </div>
+            
+            <div id="no-results" style="display: none;" class="text-center py-16">
+                <p class="text-muted-foreground text-lg">No lost items found.</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Item Detail Modal -->
+    <div id="item-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <button class="modal-close" onclick="hideItemModal()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <div class="modal-body" id="item-detail-content"></div>
+        </div>
+    </div>
+
+    <script src="js/lost-items.js"></script>
+</body>
+</html>

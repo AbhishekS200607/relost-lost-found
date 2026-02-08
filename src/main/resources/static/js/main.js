@@ -52,14 +52,19 @@ function displayItems(items) {
         const canDelete = currentUser && item.user && item.user.username === currentUser;
         const icon = categoryIcons[item.category] || categoryIcons.BAG;
         const formattedDate = new Date(item.dateFound).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }).toUpperCase();
+        const photoHtml = item.photoUrl ? `<div class="card-image"><img src="${item.photoUrl}" alt="${item.category}"></div>` : `<div class="card-icon">${icon}</div>`;
         
         itemCard.innerHTML = `
+            ${photoHtml}
             <div class="card-details">
                 <p class="text-title">${item.category}</p>
                 <p class="text-body">${item.description.length > 60 ? item.description.substring(0, 60) + '...' : item.description}</p>
                 <p class="text-meta">${item.locationFound} | ${formattedDate}</p>
             </div>
-            <button class="card-button" onclick="event.stopPropagation(); showItemDetailById(${item.id})">More info</button>
+            <div class="card-actions">
+                <button class="card-button" onclick="event.stopPropagation(); showItemDetailById(${item.id})">More info</button>
+                ${!canDelete ? `<button class="card-button chat-btn" onclick="event.stopPropagation(); contactUser('${item.user ? item.user.email : ''}', '${item.category}', ${item.id})">💬 Chat</button>` : ''}
+            </div>
         `;
         
         itemsGrid.appendChild(itemCard);
@@ -152,16 +157,19 @@ function updateAuthUI() {
     const loginBtn = document.getElementById('login-btn');
     const registerBtn = document.getElementById('register-btn');
     const logoutBtn = document.getElementById('logout-btn');
+    const chatNavBtn = document.getElementById('chat-nav-btn');
     
     if (token && username) {
         loginBtn.style.display = 'none';
         registerBtn.style.display = 'none';
         logoutBtn.style.display = 'inline-block';
         logoutBtn.textContent = `Logout (${username})`;
+        if (chatNavBtn) chatNavBtn.style.display = 'inline-block';
     } else {
         loginBtn.style.display = 'inline-block';
         registerBtn.style.display = 'inline-block';
         logoutBtn.style.display = 'none';
+        if (chatNavBtn) chatNavBtn.style.display = 'none';
     }
 }
 

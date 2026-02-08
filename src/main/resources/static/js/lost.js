@@ -48,46 +48,62 @@ function setupLostItemForm() {
             return;
         }
         
-        // For now, just show success message
-        // In a real app, you'd send this to a backend API
-        const formData = {
-            itemName: document.getElementById('item-name').value,
-            category: document.getElementById('category').value,
-            description: document.getElementById('description').value,
-            locationLost: document.getElementById('location-lost').value,
-            dateLost: document.getElementById('date-lost').value,
-            contactInfo: document.getElementById('contact-info').value
-        };
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Submitting...';
+        submitBtn.disabled = true;
         
-        // Simulate API call
         try {
-            // Show loading state
-            const submitBtn = form.querySelector('button[type="submit"]');
-            const originalText = submitBtn.textContent;
-            submitBtn.textContent = 'Submitting...';
-            submitBtn.disabled = true;
+            let photoUrl = null;
+            const photoFile = document.getElementById('photo').files[0];
             
-            // Simulate delay
-            await new Promise(resolve => setTimeout(resolve, 1000));
+            if (photoFile) {
+                const formData = new FormData();
+                formData.append('file', photoFile);
+                
+                const uploadResponse = await fetch('/api/files/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                if (uploadResponse.ok) {
+                    const uploadResult = await uploadResponse.json();
+                    photoUrl = uploadResult.url;
+                }
+            }
             
-            // Show success message
-            alert('Lost item report submitted successfully! We\'ll notify you if someone reports finding a matching item.');
+            const itemData = {
+                itemName: document.getElementById('item-name').value,
+                category: document.getElementById('category').value,
+                description: document.getElementById('description').value,
+                locationLost: document.getElementById('location-lost').value,
+                dateLost: document.getElementById('date-lost').value,
+                contactInfo: document.getElementById('contact-info').value,
+                photoUrl: photoUrl
+            };
             
-            // Reset form
-            form.reset();
-            document.getElementById('photo-preview').innerHTML = '';
-            document.getElementById('file-status').textContent = 'No file selected';
+            const response = await fetch('/api/lost-items', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(itemData)
+            });
             
-            // Restore button
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-            
+            if (response.ok) {
+                alert('Lost item report submitted successfully! We\'ll notify you if someone reports finding a matching item.');
+                form.reset();
+                document.getElementById('photo-preview').innerHTML = '';
+                document.getElementById('file-status').textContent = 'No file selected';
+            } else {
+                const error = await response.json();
+                alert('Failed to submit report: ' + error.error);
+            }
         } catch (error) {
-            alert('Failed to submit report. Please try again.');
-            
-            // Restore button
-            const submitBtn = form.querySelector('button[type="submit"]');
-            submitBtn.textContent = 'Submit Lost Report';
+            alert('Failed to submit report: ' + error.message);
+        } finally {
+            submitBtn.textContent = originalText;
             submitBtn.disabled = false;
         }
     });
