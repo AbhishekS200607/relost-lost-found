@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Chats - Relost</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen bg-background">
+    <header class="sticky top-0 z-50 bg-card border-b">
+        <div class="max-w-7xl mx-auto px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <img src="images/logo.png" alt="Relost Logo" class="logo-image">
+                <span class="logo-text">RELOST</span>
+            </div>
+            <nav class="flex items-center gap-8">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="browse.html" class="nav-link">Found Items</a>
+                <a href="lost-items.html" class="nav-link">Lost Items</a>
+                <a href="lost.html" class="nav-link">Report Lost</a>
+                <button id="chat-nav-btn" class="nav-link active">💬 Chats</button>
+                <button id="logout-btn" class="nav-link" onclick="logout()">Logout</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-8 py-16">
+        <h1 class="section-title">MY CHATS</h1>
+        
+        <div class="bg-card rounded p-8 shadow-sm">
+            <p class="text-center text-muted-foreground">
+                Click the 💬 Chat button on any item card to start a conversation with the item owner.
+            </p>
+            <div class="flex gap-4 justify-center mt-8">
+                <button onclick="window.location.href='browse.html'" class="btn-primary">Browse Found Items</button>
+                <button onclick="window.location.href='lost-items.html'" class="btn-outline">Browse Lost Items</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('jwtToken');
+            localStorage.removeItem('username');
+            localStorage.removeItem('userId');
+            window.location.href = 'index.html';
+        }
+        
+        const token = localStorage.getItem('jwtToken');
+        if (!token) {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>
