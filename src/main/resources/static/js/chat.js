@@ -23,11 +23,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
 async function loadChatInfo() {
     try {
-        const response = await fetch(`/api/items/${currentItemId}`);
-        const item = await response.json();
+        const token = localStorage.getItem('jwtToken');
+        const response = await fetch('/api/items', {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        const items = await response.json();
+        const item = items.find(i => i.id == currentItemId);
         
-        document.getElementById('chat-title').textContent = `${item.category} Found`;
-        document.getElementById('chat-subtitle').textContent = `Location: ${item.locationFound}`;
+        if (item) {
+            document.getElementById('chat-title').textContent = `${item.category} Found`;
+            const subtitle = document.querySelector('.chat-subtitle');
+            if (subtitle) {
+                subtitle.textContent = `Location: ${item.locationFound}`;
+            }
+        }
     } catch (error) {
         console.error('Error loading item info:', error);
     }
@@ -35,7 +46,12 @@ async function loadChatInfo() {
 
 async function loadMessages() {
     try {
-        const response = await fetch(`/api/chat/${currentItemId}`);
+        const token = localStorage.getItem('jwtToken');
+        const response = await fetch(`/api/chat/messages/${currentItemId}`, {
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
         if (response.ok) {
             chatMessages = await response.json();
             displayMessages();
@@ -50,31 +66,31 @@ function displayMessages() {
     const systemMessage = container.querySelector('.system-message');
     
     // Clear existing messages except system message
-    const existingMessages = container.querySelectorAll('.message');
+    const existingMessages = container.querySelectorAll('.message-wrapper');
     existingMessages.forEach(msg => msg.remove());
     
     chatMessages.forEach(message => {
-        const messageDiv = document.createElement('div');
-        messageDiv.className = `message ${message.senderUsername === currentUser ? 'sent' : 'received'}`;
+        const messageWrapper = document.createElement('div');
+        messageWrapper.className = `message-wrapper ${message.senderUsername === currentUser ? 'sent' : 'received'}`;
         
         let content = '';
         if (message.messageType === 'IMAGE') {
-            content = `<img src="${message.mediaUrl}" alt="Image" style="max-width: 200px; border-radius: 8px;">`;
+            content = `<img src="${message.mediaUrl}" alt="Image" style="max-width: 200px; border-radius: 12px;">`;
         } else if (message.messageType === 'VIDEO') {
-            content = `<video controls style="max-width: 200px; border-radius: 8px;"><source src="${message.mediaUrl}"></video>`;
+            content = `<video controls style="max-width: 200px; border-radius: 12px;"><source src="${message.mediaUrl}"></video>`;
         } else {
-            content = `<p>${message.message || ''}</p>`;
+            content = `<p class="message-text">${message.message || ''}</p>`;
         }
         
-        messageDiv.innerHTML = `
-            <div class="message-content">
+        messageWrapper.innerHTML = `
+            <div class="message-bubble">
                 ${content}
-                ${message.message && message.messageType !== 'TEXT' ? `<p>${message.message}</p>` : ''}
-                <span class="message-time">${formatTime(message.timestamp)}</span>
+                ${message.message && message.messageType !== 'TEXT' ? `<p class="message-text">${message.message}</p>` : ''}
+                <div class="message-time">${formatTime(message.timestamp)}</div>
             </div>
         `;
         
-        container.appendChild(messageDiv);
+        container.appendChild(messageWrapper);
     });
     
     scrollToBottom();
@@ -93,13 +109,16 @@ async function sendMessage() {
     }
     
     try {
-        const response = await fetch(`/api/chat/${currentItemId}`, {
+        const response = await fetch(`/api/chat/messages`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + token
             },
-            body: JSON.stringify({ message: text })
+            body: JSON.stringify({ 
+                itemId: currentItemId,
+                message: text 
+            })
         });
         
         if (response.ok) {

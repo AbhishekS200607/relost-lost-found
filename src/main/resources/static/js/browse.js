@@ -220,7 +220,10 @@ function displayItems(items) {
                 <p class="text-body">${item.description.length > 60 ? item.description.substring(0, 60) + '...' : item.description}</p>
                 <p class="text-meta">${item.locationFound} | ${formattedDate}</p>
             </div>
-            <button class="card-button" onclick="event.stopPropagation(); showItemDetailById(${item.id})">More info</button>
+            <div class="card-actions">
+                <button class="card-button" onclick="event.stopPropagation(); showItemDetailById(${item.id})">More info</button>
+                ${!canDelete ? `<button class="card-button chat-btn" onclick="event.stopPropagation(); contactUser('${item.user ? item.user.email : ''}', '${item.category}', ${item.id})">💬 Chat</button>` : ''}
+            </div>
         `;
         
         itemsGrid.appendChild(itemCard);
