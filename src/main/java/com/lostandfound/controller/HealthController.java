@@ -12,9 +12,4 @@ public class HealthController {
     public ResponseEntity<?> health() {
         return ResponseEntity.ok(Map.of("status", "UP", "message", "Application is healthy"));
     }
-
-    @GetMapping("/")
-    public ResponseEntity<?> root() {
-        return ResponseEntity.ok(Map.of("message", "Lost & Found API is running"));
-    }
 }
